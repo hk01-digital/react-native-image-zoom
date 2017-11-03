@@ -87,7 +87,7 @@ export interface PropsDefine extends ReactNative.ViewProperties {
      */
     others?: any
 
-    onMarginX?: () => void
+    onMarginX?: (isOnMargin: boolean) => void
 }
 
 export class PropsGaea {
