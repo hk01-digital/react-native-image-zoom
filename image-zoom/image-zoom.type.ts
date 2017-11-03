@@ -86,6 +86,8 @@ export interface PropsDefine extends ReactNative.ViewProperties {
      * 透传
      */
     others?: any
+
+    onMarginX?: () => void
 }
 
 export class PropsGaea {
