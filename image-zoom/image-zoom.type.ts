@@ -116,6 +116,8 @@ export class Props extends PropsGaea implements PropsDefine {
     }
     onDoubleClick = ()=> {
     }
+    onMarginX = () => {
+    }
 }
 
 export interface StateDefine {

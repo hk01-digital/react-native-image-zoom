@@ -73,6 +73,7 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
             // 要求成为响应者：
             onStartShouldSetPanResponder: (_evt, _gestureState) => setResponder,
             onPanResponderTerminationRequest: (_evt, _gestureState) => false,
+            onShouldBlockNativeResponder: (_evt, _gestureState) => false,
 
             onPanResponderGrant: (evt, _gestureState) => {
                 // 开始手势操作
@@ -195,6 +196,7 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                                         diffX += this.horizontalWholeOuterCounter
                                         this.horizontalWholeOuterCounter = 0
                                         this.props.horizontalOuterRangeOffset(0)
+                                        this.props.onMarginX(false)
                                     }
                                 } else { // 向右侧扩增
                                     this.horizontalWholeOuterCounter += diffX
@@ -211,6 +213,7 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                                         diffX += this.horizontalWholeOuterCounter
                                         this.horizontalWholeOuterCounter = 0
                                         this.props.horizontalOuterRangeOffset(0)
+                                        this.props.onMarginX(false)
                                     }
                                 } else { // 向左侧扩增
                                     this.horizontalWholeOuterCounter += diffX
@@ -252,6 +255,9 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                         if (this.horizontalWholeOuterCounter !== 0) {
                             // 如果溢出偏移量不是0，执行溢出回调
                             this.props.horizontalOuterRangeOffset(this.horizontalWholeOuterCounter)
+                            if (Math.abs(this.horizontalWholeOuterCounter) === this.props.maxOverflow) {
+                                this.props.onMarginX(true);
+                            }
                         }
 
                         if (this.props.imageHeight * this.scale > this.props.cropHeight) {
@@ -268,6 +274,7 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                     }
 
                     if (this.props.pinchToZoom) {
+                        this.props.onMarginX(false);                        
                         // 找最小的 x 和最大的 x
                         let minX: number
                         let maxX: number
@@ -377,6 +384,7 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
 
                 // 拖拽正常结束后,如果没有缩放,直接回到0,0点
                 if (this.scale === 1) {
+                    this.props.onMarginX(true);
                     this.positionX = 0
                     this.positionY = 0
                     Animated.timing(this.animatedPositionX, {
