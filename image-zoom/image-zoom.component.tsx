@@ -65,8 +65,8 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
 
     // 是否双击缩放了
     private isDoubleClickScale = false
+
     private opacity = 1
-    private animatedOpacity = new Animated.Value(1)
 
     componentWillMount() {
         const setResponder = isMobile()
@@ -149,10 +149,6 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                             }),
                             Animated.timing(this.animatedPositionY, {
                                 toValue: this.positionY,
-                                duration: 100,
-                            }),
-                            Animated.timing(this.animatedOpacity, {
-                                toValue: this.opacity,
                                 duration: 100,
                             })
                         ]).start()
@@ -250,10 +246,9 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                             // 不能横向拖拽，全部算做溢出偏移量
                             this.horizontalWholeOuterCounter += diffX
                             if (this.scale === 1) {
-                                this.opacity = 1 - (gestureState.dy - 100) / 250
+                                this.opacity = 1 - (gestureState.dy - 50) / 270
                                 if (this.opacity < 0) this.opacity = 0
                                 if (this.opacity > 1) this.opacity = 1
-                                this.animatedOpacity.setValue(this.opacity)
                                 this.props.onOpacityChange(this.opacity)
                             }
                         }
@@ -429,13 +424,11 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
 
                 if (this.opacity < 0.3) {
                     this.props.onTransparent(true)
+                } else {
+                    this.props.onOpacityChange(this.opacity)
+                    this.props.onTransparent(false)
+                    this.opacity = 1                    
                 }
-                this.opacity = 1
-                Animated.timing(this.animatedOpacity, {
-                    toValue: this.opacity,
-                    duration: 100
-                }).start()
-                this.props.onOpacityChange(this.opacity)
             },
             onPanResponderTerminate: (_evt, _gestureState) => {
 
@@ -474,12 +467,8 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
             }]
         }
 
-        const containerOpacity = {
-            opacity: this.animatedOpacity
-        }
-
         return (
-            <View style={Object.assign({}, styles.container, { width: this.props.cropWidth, height: this.props.cropHeight }, containerOpacity)} {...this.imagePanResponder.panHandlers}>
+            <View style={Object.assign({}, styles.container, { width: this.props.cropWidth, height: this.props.cropHeight })} {...this.imagePanResponder.panHandlers}>
                 <Animated.View style={animateConf}>
                     <View onLayout={this.handleLayout.bind(this)}
                         style={{ width: this.props.imageWidth, height: this.props.imageHeight }}>
