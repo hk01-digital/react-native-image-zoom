@@ -88,6 +88,8 @@ export interface PropsDefine extends ReactNative.ViewProperties {
     others?: any
 
     onMarginX?: (isOnMargin: boolean) => void
+    onOpacityChange?: (opacityValue: number) => void
+    onTransparent?: (isTansparent: boolean) => void
 }
 
 export class PropsGaea {
@@ -119,6 +121,10 @@ export class Props extends PropsGaea implements PropsDefine {
     onDoubleClick = ()=> {
     }
     onMarginX = () => {
+    }
+    onOpacityChange = () => {
+    }
+    onTransparent = () => {
     }
 }
 
