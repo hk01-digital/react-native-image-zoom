@@ -66,7 +66,7 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
     // 是否双击缩放了
     private isDoubleClickScale = false
 
-    private opacity = 1
+    private dragDownScale = 1
 
     componentWillMount() {
         const setResponder = isMobile()
@@ -246,10 +246,12 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                             // 不能横向拖拽，全部算做溢出偏移量
                             this.horizontalWholeOuterCounter += diffX
                             if (this.scale === 1) {
-                                this.opacity = 1 - (gestureState.dy - 50) / 270
-                                if (this.opacity < 0) this.opacity = 0
-                                if (this.opacity > 1) this.opacity = 1
-                                this.props.onOpacityChange(this.opacity)
+                                this.dragDownScale = 1 - (gestureState.dy - 50) / 270
+                                if (this.dragDownScale < 0.45) this.dragDownScale = 0.45
+                                if (this.dragDownScale > 1) this.dragDownScale = 1
+                                this.animatedScale.setValue(this.dragDownScale)
+                                const pY = this.positionY + gestureState.dy
+                                this.animatedPositionY.setValue(pY)
                             }
                         }
 
@@ -282,7 +284,12 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                     }
 
                     if (this.props.pinchToZoom) {
-                        this.props.onMarginX(false);                        
+                        if (this.dragDownScale !== 1) {
+                            this.dragDownScale = 1
+                            this.animatedPositionY.setValue(this.positionY)
+                            this.animatedScale.setValue(1)
+                        }
+                        this.props.onMarginX(false);
                         // 找最小的 x 和最大的 x
                         let minX: number
                         let maxX: number
@@ -422,12 +429,21 @@ export default class ImageViewer extends React.Component<typings.PropsDefine, ty
                     this.props.responderRelease(gestureState.vx, this.scale)
                 }
 
-                if (this.opacity < 0.3) {
-                    this.props.onTransparent(true)
-                } else {
-                    this.props.onOpacityChange(this.opacity)
-                    this.props.onTransparent(false)
-                    this.opacity = 1                    
+                if (this.dragDownScale < 0.55) {
+                    Animated.timing(this.animatedPositionY, {
+                        toValue: 4000,
+                        duration: 200
+                    }).start(this.props.onSizeMinimum(true))
+                } else if (this.dragDownScale !== 1) {
+                    this.dragDownScale = 1
+                    Animated.timing(this.animatedPositionY, {
+                        toValue: this.positionY,
+                        duration: 100
+                    }).start()
+                    Animated.timing(this.animatedScale, {
+                        toValue: 1,
+                        duration: 100
+                    }).start()
                 }
             },
             onPanResponderTerminate: (_evt, _gestureState) => {

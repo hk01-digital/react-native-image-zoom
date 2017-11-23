@@ -4,7 +4,7 @@ export interface PropsDefine extends ReactNative.ViewProperties {
     /**
      * 单击的回调
      */
-    onClick?: ()=>void
+    onClick?: () => void
 
     /**
      * 操作区域宽度
@@ -50,17 +50,17 @@ export interface PropsDefine extends ReactNative.ViewProperties {
      * 横向超出的距离，父级做图片切换时，可以监听这个函数
      * 当此函数触发时，可以做切换操作
      */
-    horizontalOuterRangeOffset?: (offsetX?: number)=>void
+    horizontalOuterRangeOffset?: (offsetX?: number) => void
 
     /**
      * 触发想切换到左边的图，向左滑动速度超出阈值时触发
      */
-    onDragLeft?: ()=>void
+    onDragLeft?: () => void
 
     /**
      * 松手但是没有取消看图的回调
      */
-    responderRelease?: (vx?: number, scale?: number)=>void
+    responderRelease?: (vx?: number, scale?: number) => void
 
     /**
      * 最大滑动阈值
@@ -75,12 +75,12 @@ export interface PropsDefine extends ReactNative.ViewProperties {
     /**
      * 长按的回调
      */
-    onLongPress?: ()=>void
+    onLongPress?: () => void
 
     /**
      * 双击的回调
      */
-    onDoubleClick?: ()=>void
+    onDoubleClick?: () => void
 
     /**
      * 透传
@@ -88,8 +88,7 @@ export interface PropsDefine extends ReactNative.ViewProperties {
     others?: any
 
     onMarginX?: (isOnMargin: boolean) => void
-    onOpacityChange?: (opacityValue: number) => void
-    onTransparent?: (isTansparent: boolean) => void
+    onSizeMinimum?: (isMinimum: boolean) => any
 }
 
 export class PropsGaea {
@@ -99,9 +98,9 @@ export class PropsGaea {
 }
 
 export class Props extends PropsGaea implements PropsDefine {
-    onClick = ()=> {
+    onClick = () => {
     }
-    onLongPress = ()=> {
+    onLongPress = () => {
     }
     panToMove = true
     pinchToZoom = true
@@ -114,17 +113,15 @@ export class Props extends PropsGaea implements PropsDefine {
     leaveStayTime = 100
     leaveDistance = 10
     maxOverflow = 100
-    horizontalOuterRangeOffset = ()=> {
+    horizontalOuterRangeOffset = () => {
     }
-    responderRelease = ()=> {
+    responderRelease = () => {
     }
-    onDoubleClick = ()=> {
+    onDoubleClick = () => {
     }
     onMarginX = () => {
     }
-    onOpacityChange = () => {
-    }
-    onTransparent = () => {
+    onSizeMinimum = () => {
     }
 }
 
@@ -143,4 +140,4 @@ export class State implements StateDefine {
     centerX = 0.5
     centerY = 0.5
 }
-                
+
